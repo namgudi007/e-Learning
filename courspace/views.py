@@ -2,7 +2,7 @@
 
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from .forms import UserRegistration, StudentRegistration
+from .forms import UserRegistration, StudentRegistration, InstructorRegistration
 from course.models import Student, User
 
 ## @brief view for the login page of the website.
@@ -52,14 +52,33 @@ def register_user(request):
 
     return render(request,'register_user.html', {'user_form': user_form, 'student_form': student_form})
 
+def register_teacher(request):
+    user_form = UserRegistration(request.POST or None)
+    Instructor_form = InstructorRegistration(request.POST or None)
 
+    if user_form.is_valid() and Instructor_form.is_valid():
+        user = user_form.save(commit=False)
+        username = user_form.cleaned_data['username']
+        password = user_form.cleaned_data['password']
+        #name=user_form.cleaned_data['name']
+        user.set_password(password)
+        user.save()
+
+        instructor = Instructor_form.save(commit=False)
+        instructor.user = User.objects.get(id=user.id)
+        instructor.save()
+        Instructor_form.save_m2m() # saves the many to many field relation (between the course and student model) entered in the form while selecting the courses
+
+        return login_user(request)
+
+    return render(request,'register_teacher.html', {'user_form': user_form, 'Instructor_form': Instructor_form})
 ## @brief view for the logout page.
 #
 # This view is called by /logout_user url.\n
 # It returns the webpage displayed when the user log outs of the website which is same as the login page.
 def logout_user(request):
     logout(request)
-    return render(request, 'login.html')
+    return render(request, 'homepage.html')
 
 def homepage(request): 
     return render(request,'homepage.html')

@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^logout/$', views.logout_user, name='logout_user'),
     url(r'^course/', include(('course.urls','course'), namespace='course')),
     url(r'^instructor/', include(('instructor.urls', 'instructor'), namespace='instructor')),
+    url(r'^register_teacher/$', views.register_teacher, name='register_teacher'),
     path(r'', views.homepage,name='homepage'),
 ]
 
