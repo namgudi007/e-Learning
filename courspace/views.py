@@ -72,6 +72,23 @@ def register_teacher(request):
         return login_user(request)
 
     return render(request,'register_teacher.html', {'user_form': user_form, 'Instructor_form': Instructor_form})
+
+def login_teacher(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+
+            try:
+                student = Student.objects.get(user=request.user)
+                return redirect('course:index')
+            except:
+                return redirect('instructor:instructor_index')
+        else:
+            return render(request, 'login_teacher.html', {'error_message': 'Invalid login credentials'})
+    return render(request, 'login_teacher.html')
 ## @brief view for the logout page.
 #
 # This view is called by /logout_user url.\n

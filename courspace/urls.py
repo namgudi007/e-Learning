@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^course/', include(('course.urls','course'), namespace='course')),
     url(r'^instructor/', include(('instructor.urls', 'instructor'), namespace='instructor')),
     url(r'^register_teacher/$', views.register_teacher, name='register_teacher'),
+    url(r'^login_teacher/$', views.login_teacher, name='login_teacher'),
     path(r'', views.homepage,name='homepage'),
 ]
 
